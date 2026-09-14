@@ -13,9 +13,9 @@ jobs:
     name: ${{ matrix.os }}
     runs-on: ${{ matrix.os }}-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Use nodejs
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: latest
       - name: Install dependencies
@@ -26,7 +26,7 @@ jobs:
         shell: bash
       - name: Add msbuild to PATH
         if: matrix.os == 'windows'
-        uses: microsoft/setup-msbuild@v2
+        uses: microsoft/setup-msbuild@v3
       - name: Install node-gyp
         if: matrix.os == 'windows-latest'
         run: |
@@ -55,9 +55,9 @@ jobs:
     name: ${{ matrix.os }}-${{ matrix.arch }}
     runs-on: ${{ matrix.arch == 'arm64' && 'ubuntu-26.04-arm' || 'ubuntu-26.04' }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Use nodejs
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: latest
       - name: Build
@@ -78,9 +78,9 @@ jobs:
     permissions:
       id-token: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Use nodejs
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: latest
           registry-url: 'https://registry.npmjs.org'

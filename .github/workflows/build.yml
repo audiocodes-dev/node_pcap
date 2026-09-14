@@ -12,9 +12,9 @@ jobs:
         node: [ 24, 26 ]
       fail-fast: false
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Use Node.js ${{ matrix.node }}
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node }}
       - name: Install dependencies on Linux
@@ -31,7 +31,7 @@ jobs:
         shell: bash
       - name: Add msbuild to PATH
         if: matrix.os == 'windows'
-        uses: microsoft/setup-msbuild@v2
+        uses: microsoft/setup-msbuild@v3
       - name: Install node-gyp
         if: matrix.os == 'windows-latest'
         run: |
@@ -53,7 +53,7 @@ jobs:
       fail-fast: false
     container: node:${{ matrix.node }}-alpine
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: install build deps
         run: |
           apk add g++ libpcap-dev make python3
