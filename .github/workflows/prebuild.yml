@@ -11,19 +11,15 @@ jobs:
       matrix:
         os: [ macos, windows ]
     name: ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}-latest
+    # ponytail: macOS arm64 hosted runners lack capacity; build both
+    # darwin archs on Intel (arm64 cross-compiled, untested on CI)
+    runs-on: ${{ matrix.os == 'macos' && 'macos-15-intel' || 'windows-latest' }}
     steps:
       - uses: actions/checkout@v7
       - name: Use nodejs
         uses: actions/setup-node@v7
         with:
           node-version: latest
-      - name: Install dependencies
-        if: matrix.os == 'macos'
-        run: |
-          brew update
-          brew install libpcap
-        shell: bash
       - name: Add msbuild to PATH
         if: matrix.os == 'windows'
         uses: microsoft/setup-msbuild@v3
@@ -39,6 +35,10 @@ jobs:
         run: |
           npm cache clean --force
           npm run prebuild
+      - name: Cross-build arm64
+        if: matrix.os == 'macos'
+        run: |
+          npm run prebuild -- --arch arm64
       - name: Upload prebuild artifacts
         uses: actions/upload-artifact@v7
         with:
@@ -74,6 +74,7 @@ jobs:
   publish:
     name: publish
     needs: [ prebuild, prebuild-linux ]
+    if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-26.04
     permissions:
       id-token: write
